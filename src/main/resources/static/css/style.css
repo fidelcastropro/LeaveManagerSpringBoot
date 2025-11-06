@@ -1,0 +1,35 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+body{
+    background-image: url(sece-campus.jpg);
+    background-repeat: no-repeat; 
+    background-position: center;
+    background-attachment: fixed;
+    background-size: cover;
+}
+#collegelogo{
+    height: 55px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+#navbar{
+    width: 100%;
+    height: 55px;
+    background-color: #004E9B;
+}
+#bgelement{
+    background-color: #004E9B;
+    height: 100vh;
+    opacity: 0.5;
+}
+#loginpagecontainer{
+    position: absolute;
+    height: 70%;
+    width: 50%;
+    background-color: white;
+
+}

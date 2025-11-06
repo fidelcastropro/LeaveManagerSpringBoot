@@ -1,0 +1,182 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Dayscholar form Selection</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Coming+Soon&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+        <style>
+            * {
+                padding: 0;
+                margin: 0;
+                box-sizing: border-box;
+            }
+            body {
+                font-family: "Inter", sans-serif;
+                height: 100vh;
+                background-image: url('Desktop - 43.png'); 
+                background-repeat: no-repeat;
+                background-position: center;
+                background-attachment: fixed;
+                background-size: cover;
+                color: #333;
+            }
+            #navbar {
+                width: 100%;
+                height: 55px;
+                background-color: #004E9B;
+                display: flex;
+                align-items: center;
+                padding-left: 10px;
+            }
+            #collegelogo {
+                height: 55px;
+                position: relative;
+                right: 10px;
+            }
+            .container {
+                max-width: 800px;
+                margin: 60px auto 0;
+                padding: 20px;
+                background-color: rgba(255, 255, 255, 0.8);
+                border-radius: 10px;
+                box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            }
+            h1 {
+                font-size: 24px;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+            .form-selection label {
+                display: block;
+                margin: 10px 0;
+                font-size: 18px;
+            }
+            .form-container {
+                display: none;
+                padding: 20px;
+                margin-top: 20px;
+                background-color: #e8f0fe;
+                border-radius: 10px;
+                border: 1px solid #ccc;
+            }
+            .form-container.active {
+                display: block;
+            }
+            .form-header {
+                font-size: 22px;
+                margin-bottom: 10px;
+            }
+            label {
+                display: block;
+                margin-top: 10px;
+            }
+            input[type="text"],
+            input[type="date"],
+            textarea {
+                width: 100%;
+                padding: 8px;
+                margin-top: 5px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+            }
+            input[type="file"] {
+                margin-top: 5px;
+            }
+            .button-container {
+                margin-top: 20px;
+                display: flex;
+                justify-content: flex-end;
+            }
+            .button {
+                padding: 10px 20px;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            .button:disabled { background-color: #ccc; cursor: not-allowed; }
+            #navbar a{
+                color: white;
+                padding: 10px;
+                position: relative;
+                left: 950px;
+            }
+        </style>
+        <script>
+            function showForm(formType) {
+                document.getElementById('leaveForm').classList.remove('active');
+                document.getElementById('leaveOutForm').classList.remove('active');
+
+                if (formType === 'leaveForm') {
+                    document.getElementById('leaveForm').classList.add('active');
+                } else if (formType === 'leaveOutForm') {
+                    document.getElementById('leaveOutForm').classList.add('active');
+                }
+            }
+            function enableSubmit(formId) {
+                const form = document.getElementById(formId);
+                const submitButton = form.querySelector(".button");
+                const allFilled = Array.from(form.querySelectorAll("input[required], textarea[required]"))
+                                    .every(input => input.value || input.checked);
+                submitButton.disabled = !allFilled;
+            }
+
+            function redirect() { window.location.href = "successfulsubmission.html"; }
+        </script>
+    </head>
+    <body>
+        <div id="navbar">
+            <img id="collegelogo" src="Sri-Eshwar-College-Of-Engineering.png" alt="College Logo">
+            <a href="http://localhost:3300/loginpage/hosteller/studentacceptedrequests" id="accepted-requests" class="requests">Accepted  Requests</a>
+            <a href="http://localhost:3300/loginpage/hosteller/studentpendingrequests/" id="pending-requests" class="requests">Pending Requests</a>
+        </div>
+        <div class="container">
+            <h1>Hi, it seems like you are a Day-Scholar.</h1>
+            <p>Select your Form:</p>
+            <div class="form-selection">
+                <label>
+                    <input type="radio" name="formSelection" onclick="showForm('leaveForm')"> Leave Form
+                </label>
+                <label>
+                    <input type="radio" name="formSelection" onclick="showForm('leaveOutForm')"> Leave and Out Form
+                </label>
+            </div>
+
+            <div id="leaveForm" class="form-container " oninput="enableSubmit('leaveForm')">
+                <div class="form-header">Leave Form</div>
+                <label>Date: <input type="date" required></label>
+                <label>Duration: <input type="text" placeholder="From" required> to <input type="text" placeholder="To" required></label>
+                <label>
+                    <input type="radio" name="reason" value="personal" required> Personal
+                    <input type="radio" name="reason" value="medical" required> Medical
+                    <input type="radio" name="reason" value="onDuty" required> On Duty
+                </label>
+                <label>Attach Document: <input type="file"></label>
+                <label>Purpose (if Personal): <textarea rows="3" cols="30"></textarea></label>
+                <div class="button-container">
+                    <button class="button" onclick="redirect()" type="submit" disabled>Submit</button>
+                </div>
+            </div>
+            <div id="leaveOutForm" class="form-container" oninput="enableSubmit('leaveOutForm')">
+                <div class="form-header">Leave and Out Form</div>
+                <label>Date: <input type="date" required></label>
+                <label>Duration: <input type="text" placeholder="From" required> to <input type="text" placeholder="To" required></label>
+                <label>
+                    <input type="radio" name="reasonOut" value="personal" required> Personal
+                    <input type="radio" name="reasonOut" value="medical" required> Medical
+                    <input type="radio" name="reasonOut" value="onDuty" required> On Duty
+                </label>
+                <label>Attach Document: <input type="file"></label>
+                <label>Purpose (if Personal): <textarea rows="3" cols="30"></textarea></label>
+                <label>Time of Leaving the Campus: <input type="time"></label>
+                <div class="button-container">
+                    <button class="button" onclick="redirect()" type="submit" disabled>Submit</button>
+                </div>
+            </div>
+        </div>
+    </body>
+    </html>

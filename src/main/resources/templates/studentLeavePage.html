@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Leave Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * { padding: 0; margin: 0; box-sizing: border-box; }
+        body {
+            font-family: "Inter", sans-serif;
+            background: url('/images/Desktop - 43.png') no-repeat center center/cover;
+        }
+        .container {
+            max-width: 800px;
+            margin: 80px auto;
+            background: rgba(255,255,255,0.9);
+            border-radius: 10px;
+            padding: 30px;
+        }
+        h2 { text-align: center; margin-bottom: 15px; }
+        label { display: block; margin-top: 10px; }
+        input, textarea, select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .button { margin-top: 20px; padding: 10px 20px; background: #004E9B; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+<a th:href="@{/student/leave-status}" class="btn" style="display:inline-block;padding:10px 14px;background:#004E9B;color:white;border-radius:6px;text-decoration:none;">
+    Track Leave Status
+</a>
+
+<div class="container" th:if="${studentType == 'HOSTELLER'}">
+    <h2>Hosteller Leave Form</h2>
+    <form th:action="@{/student/submit-leave}" method="post" enctype="multipart/form-data" th:object="${leaveRequest}">
+        <input type="hidden" th:field="*{student.rollNo}" />
+        <label>From Date: <input type="date" th:field="*{fromDate}" required></label>
+        <label>From Time: <input type="time" th:field="*{fromTime}" required></label>
+        <label>To Date: <input type="date" th:field="*{toDate}" required></label>
+        <label>To Time: <input type="time" th:field="*{toTime}" required></label>
+
+        <label>Reason Type:
+            <select th:field="*{reasonType}">
+                <option value="Personal">Personal</option>
+                <option value="Medical">Medical</option>
+                <option value="OnDuty">On Duty</option>
+            </select>
+        </label>
+        <label>Purpose: <textarea th:field="*{purpose}" rows="3"></textarea></label>
+        <label>Attach File: <input type="file" name="file"></label>
+        <label>Block: <input type="text" th:field="*{student.hostelBlock}" placeholder="A"></label>
+        <label>Room No: <input type="text" th:field="*{student.roomNo}" placeholder="319-B"></label>
+        <label><input type="checkbox" th:field="*{stayingOutside}"> Staying outside tonight</label>
+
+        <button type="submit" class="button">Submit</button>
+    </form>
+</div>
+
+<div class="container" th:if="${studentType == 'DAY_SCHOLAR'}">
+    <h2>Day-Scholar Leave Form</h2>
+    <form th:action="@{/student/submit-leave}" method="post" enctype="multipart/form-data" th:object="${leaveRequest}">
+        <input type="hidden" th:field="*{student.rollNo}" th:value="${student.rollNo}" />
+        <label>From Date: <input type="date" th:field="*{fromDate}" required></label>
+        <label>From Time: <input type="time" th:field="*{fromTime}" required></label>
+        <label>To Date: <input type="date" th:field="*{toDate}" required></label>
+        <label>To Time: <input type="time" th:field="*{toTime}" required></label>
+
+        <label>Reason Type:
+            <select th:field="*{reasonType}">
+                <option value="Personal">Personal</option>
+                <option value="Medical">Medical</option>
+                <option value="OnDuty">On Duty</option>
+            </select>
+        </label>
+        <label>Purpose: <textarea th:field="*{purpose}" rows="3"></textarea></label>
+        <label>Attach File: <input type="file" name="file"></label>
+        <button type="submit" class="button">Submit</button>
+    </form>
+</div>
+
+<div th:if="${successMsg}" style="text-align:center; color:green; font-weight:bold;" th:text="${successMsg}"></div>
+<div th:if="${errorMsg}" 
+     style="text-align:center; color:red; font-weight:bold;" 
+     th:text="${errorMsg}">
+</div>
+</body>
+</html>
