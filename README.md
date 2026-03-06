@@ -136,4 +136,17 @@ Key application properties:
 4. Push to the branch
 5. Create a Pull Request
 
+# Author
+
+**Antony Fidel Castro A**
+
+Engineering Student – Information Technology
+Interested in:
+
+* Full Stack Development
+* Artificial Intelligence
+* Machine Learning
+* Computer Vision
+
+
 
