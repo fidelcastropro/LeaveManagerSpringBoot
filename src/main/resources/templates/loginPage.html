@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+    <style>
+        /* same CSS as your original code */
+        *{padding:0;margin:0;box-sizing:border-box;}
+        body{
+            height:100vh;display:flex;justify-content:center;align-items:center;
+            background: url("images/Desktop - 43.png");
+            no-repeat center center/cover;
+        }
+        #navbar{width:100%;height:55px;background:#004E9B;position:fixed;top:0;left:0;display:flex;align-items:center;}
+        #collegelogo{height:55px;position:absolute;top:0;left:0;}
+        .container{background:rgba(255,255,255,0.8);width:400px;height:450px;border-radius:10px;text-align:center;padding:20px;margin-top:80px;}
+        .tabs{display:flex;justify-content:space-around;margin-bottom:20px;}
+        .tab{padding:10px;cursor:pointer;font-weight:bold;color:#333;}
+        .tab.active{color:#007bff;border-bottom:2px solid #007bff;}
+        .form-group{margin:20px 0;}
+        .form-group input{width:80%;padding:10px;border:1px solid #ccc;border-radius:5px;margin-top:10px;}
+        .buttons{display:flex;justify-content:space-around;}
+        .buttons button{padding:10px 20px;border:none;border-radius:5px;font-weight:bold;cursor:pointer;}
+        .buttons .cancel{background-color:#f0f0f0;color:#333;}
+        .buttons .login{background-color:#007bff;color:white;}
+    </style>
+    <script>
+        function selectTab(userType) {
+            document.getElementById("selectedUserType").value = userType;
+            const tabs = document.querySelectorAll(".tab");
+            tabs.forEach(tab => tab.classList.remove("active"));
+            document.getElementById(userType.toLowerCase() + "Tab").classList.add("active");
+            document.getElementById("email").placeholder = userType.toLowerCase() + "@sece.ac.in";
+        }
+    </script>
+</head> 
+<body>
+    <div id="navbar">
+        <img id="collegelogo" th:src="@{/images/Sri-Eshwar-College-Of-Engineering.png}" alt="College Logo">
+    </div>
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" id="studentTab" onclick="selectTab('Student')">Student</div>
+            <div class="tab" id="facultyTab" onclick="selectTab('Faculty')">Faculty</div>
+            <div class="tab" id="hodTab" onclick="selectTab('HOD')">HOD</div>
+            <div class="tab" id="wardenTab" onclick="selectTab('Warden')">Warden</div>
+        </div>
+        <h2>Welcome</h2>
+        <p>Login to your Account</p>
+        <form th:action="@{/login}" method="post">
+            <input type="hidden" id="selectedUserType" name="selectedUserType" value="Student">
+            <div class="form-group">
+                <input type="text" id="email" name="email" placeholder="student@sece.ac.in" required>
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" name="password" placeholder="Password" required>
+            </div>
+            <p th:text="${msg}" style="color:red;"></p>
+            
+            <div class="buttons">
+                <button type="reset" class="cancel">Cancel</button>
+                <button type="submit" class="login">Login</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

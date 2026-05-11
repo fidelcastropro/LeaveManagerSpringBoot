@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Faculty Dashboard | LeaveItToUs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Inter", sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: url('/images/Desktop - 43.png') no-repeat center center / cover fixed;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            background: #004E9B;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            height: 60px;
+            flex-shrink: 0;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .nav-brand img { height: 38px; }
+
+        .nav-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .nav-center .faculty-name {
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .nav-center .faculty-email {
+            color: rgba(255,255,255,0.6);
+            font-size: 12px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge-role {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .btn-logout {
+            background: #e53935;
+            color: white;
+            padding: 7px 16px;
+            border-radius: 7px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .btn-logout:hover { background: #c62828; }
+
+        /* ── LAYOUT ── */
+        .layout {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            width: 300px;
+            flex-shrink: 0;
+            background: rgba(0, 78, 155, 0.85);
+            border-right: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sidebar-header {
+            padding: 18px 20px 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .sidebar-header h3 {
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+        }
+
+        .sidebar-header .count {
+            display: inline-block;
+            background: #f59e0b;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 8px;
+        }
+
+        .sidebar-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .sidebar-list::-webkit-scrollbar { width: 4px; }
+        .sidebar-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 4px; }
+
+        .req-card {
+            background: rgba(255,255,255,0.9);
+            border-radius: 10px;
+            padding: 12px 14px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .req-card:hover { background: white; border-color: #004E9B; }
+        .req-card.active { background: white; border-color: #004E9B; box-shadow: 0 0 0 3px rgba(0,78,155,0.15); }
+
+        .req-card .roll {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e3a5f;
+        }
+
+        .req-card .req-meta {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 3px;
+        }
+
+        .req-card .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 5px;
+            background: #f59e0b;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+        }
+
+        .empty-state .icon { font-size: 36px; margin-bottom: 10px; }
+
+        /* ── CONTENT PANEL ── */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Flash alerts */
+        .alert {
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .alert-success { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+        .alert-error   { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+        /* Placeholder */
+        .placeholder {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.85);
+            border-radius: 16px;
+            border: 1px solid rgba(0,78,155,0.15);
+            color: #374151;
+            text-align: center;
+            padding: 40px;
+            min-height: 300px;
+        }
+
+        .placeholder .icon { font-size: 52px; margin-bottom: 14px; }
+        .placeholder h3 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+        .placeholder p  { font-size: 14px; opacity: 0.7; }
+
+        /* Detail card */
+        .detail-card {
+            background: rgba(255,255,255,0.96);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+
+        .detail-header {
+            background: linear-gradient(135deg, #004E9B, #0066cc);
+            padding: 22px 28px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .detail-header h2 { font-size: 18px; font-weight: 700; }
+        .detail-header p  { font-size: 13px; opacity: 0.8; margin-top: 3px; }
+
+        .status-badge {
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-S  { background: #fef3c7; color: #92400e; }
+        .status-FA { background: #d1fae5; color: #065f46; }
+        .status-FR { background: #fee2e2; color: #991b1b; }
+        .status-HA { background: #dbeafe; color: #1e40af; }
+        .status-HR { background: #fce7f3; color: #9d174d; }
+
+        .detail-body {
+            padding: 24px 28px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .info-item label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: #9ca3af;
+            margin-bottom: 4px;
+        }
+
+        .info-item .value {
+            font-size: 15px;
+            font-weight: 500;
+            color: #111827;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #e5e7eb;
+            margin: 20px 0;
+        }
+
+        .purpose-box {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        .attachment-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #004E9B;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            padding: 8px 14px;
+            border: 1.5px solid #004E9B;
+            border-radius: 7px;
+            margin-top: 12px;
+        }
+
+        .attachment-link:hover { background: #f0f6ff; }
+
+        .action-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .btn-approve, .btn-reject {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 9px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-approve { background: #16a34a; color: white; }
+        .btn-approve:hover { background: #15803d; transform: translateY(-1px); }
+
+        .btn-reject { background: #dc2626; color: white; }
+        .btn-reject:hover { background: #b91c1c; transform: translateY(-1px); }
+
+        /* ── FOOTER ── */
+        .footer {
+            background: #004E9B;
+            color: rgba(255,255,255,0.8);
+            text-align: center;
+            padding: 10px;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a class="nav-brand" href="#">
+            <img th:src="@{/images/Sri-Eshwar-College-Of-Engineering.png}" alt="SECE Logo">
+            LeaveItToUs
+        </a>
+        <div class="nav-center">
+            <span class="faculty-name" th:text="${faculty.name}">Faculty Name</span>
+            <span class="faculty-email" th:text="${faculty.emailId}">faculty@sece.ac.in</span>
+        </div>
+        <div class="nav-right">
+            <span class="badge-role">Faculty</span>
+            <a th:href="@{/logout}" class="btn-logout">Logout</a>
+        </div>
+    </nav>
+
+    <!-- LAYOUT -->
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3>
+                    Leave Requests
+                    <span class="count" th:text="${#lists.size(leaveRequests)}">0</span>
+                </h3>
+            </div>
+
+            <div class="sidebar-list">
+                <div th:if="${#lists.isEmpty(leaveRequests)}" class="empty-state">
+                    <div class="icon">📭</div>
+                    <p>No pending requests</p>
+                </div>
+
+                <div th:each="req : ${leaveRequests}"
+                     class="req-card"
+                     th:data-leaveid="${req.leaveId}"
+                     onclick="showStudentDetails(this)">
+                    <div class="roll">
+                        <span class="status-dot"></span>
+                        <span th:text="${req.student.rollNo}"></span>
+                    </div>
+                    <div class="req-meta">
+                        <span th:text="${req.student.name}">Student Name</span>
+                    </div>
+                    <div class="req-meta" th:text="${req.fromDate} + ' → ' + ${req.toDate}"></div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CONTENT -->
+        <section class="content">
+
+            <!-- Flash messages -->
+            <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+            <div th:if="${errorMessage}"   class="alert alert-error"   th:text="${errorMessage}"></div>
+
+            <!-- Placeholder -->
+            <div class="placeholder" id="placeholder">
+                <div class="icon">👈</div>
+                <h3>Select a Leave Request</h3>
+                <p>Click on a student from the sidebar to review their leave application</p>
+            </div>
+
+            <!-- Detail card (hidden until selection) -->
+            <div class="detail-card" id="detailCard" style="display:none;">
+
+                <div class="detail-header">
+                    <div>
+                        <h2 id="dc-title">Student Name</h2>
+                        <p id="dc-rollno">Roll No</p>
+                    </div>
+                    <span class="status-badge" id="dc-status-badge">Pending</span>
+                </div>
+
+                <div class="detail-body">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>From</label>
+                            <div class="value" id="dc-from"></div>
+                        </div>
+                        <div class="info-item">
+                            <label>To</label>
+                            <div class="value" id="dc-to"></div>
+                        </div>
+                        <div class="info-item">
+                            <label>Reason Type</label>
+                            <div class="value" id="dc-reason"></div>
+                        </div>
+                        <div class="info-item">
+                            <label>Applied On</label>
+                            <div class="value" id="dc-applied"></div>
+                        </div>
+                    </div>
+
+                    <hr class="divider">
+
+                    <div class="info-item">
+                        <label>Purpose</label>
+                        <div class="purpose-box" id="dc-purpose">—</div>
+                    </div>
+
+                    <div id="dc-attachment"></div>
+
+                    <div class="action-row">
+                        <form method="post" action="/faculty/approve-leave" style="flex:1;">
+                            <input type="hidden" name="leaveId" id="approve-id">
+                            <button type="submit" class="btn-approve">✅ Approve Leave</button>
+                        </form>
+                        <form method="post" action="/faculty/reject-leave" style="flex:1;">
+                            <input type="hidden" name="leaveId" id="reject-id">
+                            <button type="submit" class="btn-reject">❌ Reject Leave</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        © 2025 LeaveItToUs &nbsp;|&nbsp; Sri Eshwar College of Engineering
+    </footer>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const leaveRequests   = /*[[${leaveRequests}]]*/ [];
+        const selectedLeaveId = /*[[${selectedLeaveId}]]*/ null;
+
+        function getStatusText(s) {
+            return { S:'Pending', FA:'Faculty Approved', FR:'Faculty Rejected', HA:'HOD Approved', HR:'HOD Rejected' }[s] || s;
+        }
+
+        // LocalDate arrives as [yyyy, mm, dd], LocalTime as [hh, mm] or [hh, mm, ss]
+        // LocalDateTime as [yyyy, mm, dd, hh, mm, ss, ...]
+        function fmtDate(d) {
+            if (!d) return '—';
+            if (Array.isArray(d)) {
+                const [y, m, day] = d;
+                return String(day).padStart(2,'0') + '/' + String(m).padStart(2,'0') + '/' + y;
+            }
+            return d;
+        }
+
+        function fmtTime(t) {
+            if (!t) return '';
+            if (Array.isArray(t)) {
+                const [h, m] = t;
+                return String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+            }
+            return t;
+        }
+
+        function fmtDateTime(dt) {
+            if (!dt) return '—';
+            if (Array.isArray(dt)) {
+                const [y, mo, d, h, m] = dt;
+                return String(d).padStart(2,'0') + '/' + String(mo).padStart(2,'0') + '/' + y
+                     + '  ' + String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+            }
+            return String(dt).replace('T', '  ');
+        }
+
+        function showStudentDetails(card) {
+            document.querySelectorAll('.req-card').forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+
+            const leaveId = card.getAttribute('data-leaveid');
+            const r = leaveRequests.find(x => String(x.leaveId) === String(leaveId));
+            if (!r) return;
+
+            document.getElementById('placeholder').style.display = 'none';
+            document.getElementById('detailCard').style.display  = 'block';
+
+            document.getElementById('dc-title').textContent   = r.student.name || r.student.rollNo;
+            document.getElementById('dc-rollno').textContent  = 'Roll No: ' + r.student.rollNo + '  |  Class: ' + (r.student.classId || '—');
+            document.getElementById('dc-from').textContent    = fmtDate(r.fromDate) + '  ' + fmtTime(r.fromTime);
+            document.getElementById('dc-to').textContent      = fmtDate(r.toDate)   + '  ' + fmtTime(r.toTime);
+            document.getElementById('dc-reason').textContent  = r.reasonType || '—';
+            document.getElementById('dc-applied').textContent = fmtDateTime(r.appliedTime);
+            document.getElementById('dc-purpose').textContent = r.purpose || '—';
+
+            const badge = document.getElementById('dc-status-badge');
+            badge.textContent = getStatusText(r.status);
+            badge.className   = 'status-badge status-' + r.status;
+
+            document.getElementById('approve-id').value = r.leaveId;
+            document.getElementById('reject-id').value  = r.leaveId;
+
+            const attDiv = document.getElementById('dc-attachment');
+            attDiv.innerHTML = r.filePath
+                ? `<a class="attachment-link" href="/${r.filePath}" target="_blank">📎 View Attachment</a>`
+                : '';
+        }
+        // Auto-reopen the card that was just approved/rejected
+        document.addEventListener('DOMContentLoaded', function () {
+            if (selectedLeaveId !== null) {
+                const r = leaveRequests.find(x => x.leaveId == selectedLeaveId);
+                if (r) {
+                    const card = document.querySelector(`.req-card[data-leaveid="${r.leaveId}"]`);
+                    if (card) showStudentDetails(card);
+                }
+            }
+        });
+        /*]]>*/
+    </script>
+</body>
+</html>

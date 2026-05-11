@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostel leave form</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Coming+Soon&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        body {
+            overflow-y: hidden;
+            font-family: "Inter", sans-serif;
+            height: 100vh;
+            background-image: url('Desktop - 43.png');
+            background-repeat: no-repeat; 
+            background-position: center;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+        #collegelogo {
+            height: 55px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .content {
+            background-color: rgba(255, 255, 255, 0.636);
+            margin: 6px 10px;
+            padding: 100px 19% 0;
+            height: 100%;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #navbar {
+            width: 100%;
+            height: 55px;
+            background-color: #004E9B;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+        }
+        #navbar a{
+            margin-left: auto;
+            color: white;
+            padding: 10px;
+            text-decoration: underline;
+        }
+        #accepted-requests{
+            position: relative;
+            left: 550px;
+        }
+        #pending-requests{
+            position: relative;
+            right: 40px;
+        }
+        #leaveform-img {
+            position: relative;
+            bottom: 80px;
+        }
+        #buttonc, #buttond {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            font-weight: bold;
+            color: white;
+            background-color: #004E9B;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+        }
+        #buttonc {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+        }
+        
+        #buttond {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar">
+        <img id="collegelogo" src="Sri-Eshwar-College-Of-Engineering.png" alt="College Logo">
+        <a href="http://localhost:3300/loginpage/wardengreeting/wardengrantedapprovals/" id="accepted-requests" class="requests">Granted Approvals</a>
+        <a href="http://localhost:3300/loginpage/wardengreeting/wardenpendingapprovals/" id="pending-requests" class="requests">Pending Approvals</a>
+    </div>
+    <div class="content">
+        <img src="hostelleave.jpg" id="leaveform-img" width="400" height="370" alt="College Leave Form">
+        <a href="http://localhost:3300/loginpage/wardengreeting/wardengrantedapprovals/leaveform2">
+            <button type="button" id="buttond">&lt;</button>
+        </a>
+    </div>
+</body>
+</html>

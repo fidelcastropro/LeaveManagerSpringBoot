@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leave Approval System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Coming+Soon&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: "Inter", sans-serif;
+      height: 100vh;
+      background-image: url(Desktop\ -\ 43.png);
+      background-repeat: no-repeat; 
+      background-position: center;
+      background-attachment: fixed;
+      background-size: cover;
+      overflow: hidden;
+    }
+    .container {
+      display: flex;
+      height: calc(100vh - 50px);
+      border-radius: 10px; 
+      background-color: rgba(255, 255, 255, 0.636);
+      height: 92%;
+      margin-top: -14px;
+      margin-left: 20px;
+      margin-right: 10px;
+    }
+.sidebar {
+      padding: 20px;
+      width: 20%;
+      border-top-left-radius: 10px;
+      border-bottom-left-radius:10px;
+      margin-left: 29px;
+      height: 92%;
+      margin-top: -14px;
+    }
+    .sidebar button {
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 10px;
+      background-color: #4d9ff9;
+      border: none;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+      text-align: left;
+      margin-left: -17px;
+    }
+    .sidebar button:hover {
+      background-color: #1a73e8;
+    }
+    .main {
+      display: inline;
+      padding: 20px;
+      background-color: white;
+      overflow-y: auto;
+      position: relative;
+      border-radius: 10px;
+      height: 90%;
+      margin-left: 350px;
+      margin-right: 400px;
+      margin-top: 0px;
+      overflow: hidden;
+      position: absolute;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .profile-icon {
+      width: 100px;
+      height: 100px;
+      background-color: #4d9ff9;
+      border-radius: 50%;
+    }
+    .header h2 {
+      margin-left: 20px;
+      font-size: 24px;
+    }
+    .details {
+      margin-bottom: 20px;
+    }
+    .details p {
+      font-size: 16px;
+      margin: 5px 0;
+    }
+    a {
+      color: #1a73e8;
+      text-decoration: none;
+    }
+    .leave-history {
+      margin-top: 50px;
+      margin-right:30px ;
+      position: fixed;
+      right: 20px;
+      top: 20px;
+      width: 250px;
+      background-color: #f4f8ff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .leave-history h3 {
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+    .leave-history table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .leave-history th, .leave-history td {
+      padding: 5px;
+      text-align: center;
+    }
+    .checkbox-container {
+      display: flex;
+      margin-bottom: 20px;
+      margin-top: 400px;
+      margin-right:60px ;
+      position: fixed;
+      right: 20px;
+      top: 20px;
+      width: 250px;
+    }
+    .checkbox-container input {
+      margin-right: 10px;
+    }
+    .signature {
+      margin-top: 40px;
+      display: flex;
+      justify-content: space-between;
+    }
+.signature div {
+      text-align: center;
+      width: 30%;
+      padding: 10px;
+      border-top: 1px solid black;
+    }
+    .actions {
+      position: fixed;
+      right: 150px;
+      bottom: 20px;
+      display: flexbox;
+      gap: 10px;
+    }
+  .actions button {
+      margin-right: 10px;
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 20px;
+      width:100%
+    }
+    .approve-btn {
+      background-color: #4caf50;
+      color: white;
+     }
+    .deny-btn {
+      background-color: #f44336;
+      color: white;
+      width: 200%;
+    }
+    .navbar {
+      width: 101%;
+      height: 55px;
+      background-color: #004E9B;
+      display: flex;
+      padding-left: 10px;
+      margin-top: -8px;
+      margin-left: -8px;
+    }
+    .navbar a {
+      color: white;
+      padding: 10px;
+      position: relative;
+      left: 930px;
+    }
+    span {
+      text-decoration: underline;
+    }
+    .note{
+      margin-bottom: 20px;
+      margin-top: 430px;
+      margin-right:60px ;
+      position: fixed;
+      right: 20px;
+      top: 20px;
+      width: 250px;
+      color: red;
+    }
+    img {
+      margin-left: -10px;
+    }
+    #note2{
+      margin-top: 320px;
+      margin-right:30px;
+      margin-left: 900px;
+      font-size:20px;
+    }
+    .note3{
+      background-image: url(profile.png);
+    }
+    #img2{
+      position: relative;
+      right: 3px;
+      top: 2px;
+    }
+    .approval{
+      height: 30px;
+      width: 100px;
+      color: red;
+      border: 2px solid red;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      display: inline;
+    }
+    #advisor-approval{
+      display: none;
+      position: relative;
+      left: 42px;
+    }
+    #hod-approval{
+      display: none;
+      position: relative;
+      left: 128px;
+    }
+    #warden-approval{
+      display: none;
+      position: relative;
+      left: 215px;
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <img id="collegelogo" src="Sri-Eshwar-College-Of-Engineering logo.png">
+    <a href="http://localhost:3300/loginpage/facultygreeting/facultygrantedapprovals/" id="Granted-approvals" class="requests"><span>Granted Approvals</span></a>
+    <a href="http://localhost:3300/loginpage/facultygreeting/facultypendingapprovals/" id="pending-approvals" class="requests"><span>Pending Approvals</span></a>
+  </div><br>
+
+  <div class="container">
+    <div class="sidebar">
+      <h2>Pending Approvals</h2>
+      <button onclick="selectStudent('Pranav A', '24BTADMIT048', ['7', '24'])">Pranav A</button>
+      <button onclick="selectStudent('Ajay B', '24BTCSMIT099', ['15'])">Ajay B</button>
+      <button onclick="selectStudent('Sita C', '24BTADMCS111', ['3', '12'])">Sita C</button>
+    </div>
+    <div id="note2"><img src="profile1.jpg" id="img2">Leave Taken</div>
+    <div class="main">
+      <div class="header">
+        <div class="profile-icon">
+          <img src="">
+        </div>
+        <div>
+          <h2 id="studentName">Pranav A</h2>
+          <h2>CCE - A </h2>
+          <h2>Hosteller </h2>
+        </div>
+      </div>
+      <div class="checkbox-container">
+        <input type="checkbox" id="parentsInformed">
+        <label for="parentsInformed">Parents Informed</label>
+        <span class="note">(note*only check if you have spoken with the parents)</span>
+      </div>
+      <div class="leave-history" id="leaveHistory">
+        <h3>Leave History:</h3>
+        <h3>Novemeber,2024:-</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Su</th>
+              <th>Mo</th>
+              <th>Tu</th>
+              <th>We</th>
+              <th>Th</th>
+              <th>Fr</th>
+              <th>Sa</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody">
+            <tr><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td class="note3">7</td></tr>
+            <tr><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td></tr>
+            <tr><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td></tr>
+            <tr><td>22</td><td>23</td><td class="note3">24</td><td>25</td><td>26</td><td>27</td><td>28</td></tr>
+            <tr><td>29</td><td>30</td><td>31</td></tr>
+          </tbody>
+        </table>
+      </div>  
+      <div class="details">
+        <p><strong>Roll no:</strong> <span id="rollNo">24BTADMIT048</span></p>
+        <p><strong>From:</strong> 28/10/24 (Wed)</p>
+        <p><strong>To:</strong> 28/10/24 (Wed)</p>
+        <p><strong>Leave Applied on:</strong> 24/10/24</p>
+        <p><strong>No. of Days:</strong> 1</p>
+        <p><strong>Purpose:</strong> On Duty <a href="#">Documents Submitted</a></p>
+        <p><strong>Time of leaving:</strong> 9:00 AM</p>
+        <p><strong>Time of returning:</strong> 10:00 PM</p>
+        <p><strong>Place of leaving the campus:</strong> SRCE</p>
+        <p><strong>Phone No. of Parent/Guardian:</strong> 8300688010</p>
+      </div>
+      <div class="signature">
+        <div>Class Advisor Signature</div>
+        <div>HOD Signature</div>
+        <div>Hostel Warden Signature</div>
+      </div>
+      <div id="advisor-approval" class="approval">
+        APPROVED
+      </div>
+      <div id="hod-approval" class="approval">
+        APPROVED
+      </div>
+      <div id="warden-approval" class="approval">
+        APPROVED
+      </div>
+    </div>
+  </div>
+  <div class="actions">
+    <button class="approve-btn" onclick="confirmRequest()">Approve Request</button><br>
+    <br>
+    <button class="deny-btn" onclick="confirmRequest()">Deny   Request</button>
+  </div>
+  <script>
+    function selectStudent(name, rollNo, leaveDays) {
+      document.getElementById("leaveHistory").style.display = "block";
+      document.getElementById("studentName").textContent = name;
+      document.getElementById("rollNo").textContent = rollNo;
+      const historyTableBody = document.getElementById("historyTableBody");
+      historyTableBody.innerHTML = '';
+      const daysInMonth = 30; 
+      let currentRow = document.createElement('tr');
+      for (let i = 1; i <= daysInMonth; i++) {
+        const cell = document.createElement('td');
+        if (leaveDays.includes(i.toString())) {
+          cell.textContent = i;
+          cell.style.backgroundColor = 'red';
+        } else {
+          cell.textContent = i;
+        }
+        currentRow.appendChild(cell);
+        if (i % 7 === 0) {
+          historyTableBody.appendChild(currentRow);
+          currentRow = document.createElement('tr');
+        }
+      }
+    }
+    function confirmRequest(){
+      const user_choice=window.confirm("Are you sure about your choice?");
+      if(user_choice){
+      }
+      else{
+      }
+    }
+  </script>
+</body>
+</html>

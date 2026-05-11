@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Leave Status | LeaveItToUs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "Inter", sans-serif;
+      min-height: 100vh;
+      background: url('/images/Desktop - 43.png') no-repeat center center / cover fixed;
+    }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      background: #004E9B;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: white;
+      font-size: 18px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .nav-brand img { height: 38px; }
+
+    .nav-right { display: flex; gap: 10px; }
+
+    .btn-nav {
+      padding: 7px 16px;
+      border-radius: 7px;
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-back   { background: rgba(255,255,255,0.15); color: white; border: 1px solid rgba(255,255,255,0.3); }
+    .btn-back:hover { background: rgba(255,255,255,0.25); }
+    .btn-logout { background: #e53935; color: white; }
+    .btn-logout:hover { background: #c62828; }
+
+    /* ── PAGE ── */
+    .page { max-width: 860px; margin: 0 auto; padding: 32px 16px 60px; }
+
+    .page-title {
+      color: white;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty {
+      background: rgba(255,255,255,0.92);
+      border-radius: 14px;
+      padding: 48px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 15px;
+    }
+
+    .empty .icon { font-size: 48px; margin-bottom: 12px; }
+
+    /* ── LEAVE CARD ── */
+    .leave-card {
+      background: rgba(255,255,255,0.96);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+      margin-bottom: 20px;
+    }
+
+    .leave-card-header {
+      background: linear-gradient(135deg, #004E9B, #0066cc);
+      padding: 16px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .leave-card-header .meta { color: white; }
+    .leave-card-header .meta h3 { font-size: 15px; font-weight: 600; }
+    .leave-card-header .meta p  { font-size: 12px; opacity: 0.8; margin-top: 2px; }
+
+    .status-pill {
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .pill-S  { background: #fef3c7; color: #92400e; }
+    .pill-FA { background: #d1fae5; color: #065f46; }
+    .pill-FR { background: #fee2e2; color: #991b1b; }
+    .pill-HA { background: #dbeafe; color: #1e40af; }
+    .pill-HR { background: #fce7f3; color: #9d174d; }
+    .pill-WA { background: #ede9fe; color: #5b21b6; }
+    .pill-WR { background: #fff1f2; color: #9f1239; }
+
+    .leave-card-body { padding: 18px 22px; }
+
+    .info-row {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .info-item label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #9ca3af;
+      margin-bottom: 3px;
+    }
+
+    .info-item .val { font-size: 14px; font-weight: 500; color: #111827; }
+
+    .purpose-text {
+      font-size: 13px;
+      color: #4b5563;
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 7px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    .approvers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .approver-item {
+      display: flex;
+      flex-direction: column;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 8px 14px;
+      min-width: 140px;
+    }
+
+    .approver-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #3b82f6;
+      margin-bottom: 3px;
+    }
+
+    .approver-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1e3a5f;
+    }
+
+    .approver-item.rejected {
+      background: #fff1f2;
+      border-color: #fecdd3;
+    }
+
+    .approver-item.rejected .approver-label { color: #dc2626; }
+    .approver-item.rejected .approver-name  { color: #7f1d1d; }
+
+    /* ── TRACKER ── */
+    .tracker-wrap { overflow-x: auto; padding-bottom: 4px; }
+
+    .tracker {
+      display: flex;
+      align-items: flex-start;
+      min-width: 500px;
+      position: relative;
+      padding: 8px 0 4px;
+    }
+
+    /* connecting line */
+    .tracker::before {
+      content: '';
+      position: absolute;
+      top: 22px;
+      left: 20px;
+      right: 20px;
+      height: 3px;
+      background: #e5e7eb;
+      z-index: 0;
+    }
+
+    .step {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #e5e7eb;
+      border: 3px solid #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #9ca3af;
+      font-weight: 700;
+      transition: all 0.3s;
+      margin-bottom: 8px;
+    }
+
+    .step-label {
+      font-size: 10px;
+      font-weight: 500;
+      color: #9ca3af;
+      text-align: center;
+      line-height: 1.3;
+      max-width: 64px;
+    }
+
+    /* completed step */
+    .step.done .circle {
+      background: #16a34a;
+      border-color: #16a34a;
+      color: white;
+    }
+
+    .step.done .step-label { color: #16a34a; font-weight: 600; }
+
+    /* current active step */
+    .step.current .circle {
+      background: #004E9B;
+      border-color: #004E9B;
+      color: white;
+      box-shadow: 0 0 0 4px rgba(0,78,155,0.2);
+    }
+
+    .step.current .step-label { color: #004E9B; font-weight: 700; }
+
+    /* rejected step */
+    .step.rejected .circle {
+      background: #dc2626;
+      border-color: #dc2626;
+      color: white;
+      box-shadow: 0 0 0 4px rgba(220,38,38,0.2);
+    }
+
+    .step.rejected .step-label { color: #dc2626; font-weight: 700; }
+
+    /* progress line fill — injected via JS width on a pseudo overlay */
+    .tracker-progress {
+      position: absolute;
+      top: 22px;
+      left: 20px;
+      height: 3px;
+      background: #16a34a;
+      z-index: 0;
+      transition: width 0.4s ease;
+    }
+
+    .tracker-progress.rejected-line { background: #dc2626; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a class="nav-brand" href="#">
+      <img th:src="@{/images/Sri-Eshwar-College-Of-Engineering.png}" alt="SECE Logo">
+      LeaveItToUs
+    </a>
+    <div class="nav-right">
+      <a th:href="@{/student/leave-form(type=${loggedStudent?.studentType?.name()}, rollNo=${loggedStudent?.rollNo})}" class="btn-nav btn-back">← Apply Leave</a>
+      <a th:href="@{/logout}" class="btn-nav btn-logout">Logout</a>
+    </div>
+  </nav>
+
+  <div class="page">
+    <div class="page-title">My Leave Requests</div>
+
+    <!-- Empty state -->
+    <div class="empty" th:if="${#lists.isEmpty(leaveRequests)}">
+      <div class="icon">📋</div>
+      <p>You have not applied for any leave yet.</p>
+    </div>
+
+    <!-- Leave cards -->
+    <div th:each="leave : ${leaveRequests}" class="leave-card">
+
+      <div class="leave-card-header">
+        <div class="meta">
+          <h3 th:text="${leave.reasonType} + ' Leave'">Leave</h3>
+          <p th:text="${leave.fromDate} + '  →  ' + ${leave.toDate}"></p>
+        </div>
+        <span class="status-pill"
+              th:classappend="'pill-' + ${leave.status}"
+              th:text="${leave.status == 'S'  ? 'Pending' :
+                         leave.status == 'FA' ? 'Faculty Approved' :
+                         leave.status == 'FR' ? 'Faculty Rejected' :
+                         leave.status == 'HA' ? 'HOD Approved' :
+                         leave.status == 'HR' ? 'HOD Rejected' :
+                         leave.status == 'WA' ? 'Warden Approved' :
+                         leave.status == 'WR' ? 'Warden Rejected' :
+                         leave.status}">
+        </span>
+      </div>
+
+      <div class="leave-card-body">
+        <div class="info-row">
+          <div class="info-item">
+            <label>From</label>
+            <div class="val" th:text="${leave.fromDate} + '  ' + ${leave.fromTime}"></div>
+          </div>
+          <div class="info-item">
+            <label>To</label>
+            <div class="val" th:text="${leave.toDate} + '  ' + ${leave.toTime}"></div>
+          </div>
+          <div class="info-item">
+            <label>Applied On</label>
+            <div class="val" th:text="${leave.appliedTime}"></div>
+          </div>
+        </div>
+
+        <div class="purpose-text" th:text="${leave.purpose}"></div>
+
+        <!-- Approver names -->
+        <div class="approvers">
+          <div class="approver-item" th:classappend="${leave.status == 'FR'} ? 'rejected'" th:if="${leave.facultyName != null}">
+            <span class="approver-label"
+                  th:text="${leave.status == 'FR'} ? 'Rejected by Faculty' : 'Approved by Faculty'">
+            </span>
+            <span class="approver-name" th:text="${leave.facultyName}"></span>
+          </div>
+          <div class="approver-item" th:classappend="${leave.status == 'HR'} ? 'rejected'" th:if="${leave.hodName != null}">
+            <span class="approver-label"
+                  th:text="${leave.status == 'HR'} ? 'Rejected by HOD' : 'Approved by HOD'">
+            </span>
+            <span class="approver-name" th:text="${leave.hodName}"></span>
+          </div>
+          <div class="approver-item" th:classappend="${leave.status == 'WR'} ? 'rejected'" th:if="${leave.wardenName != null}">
+            <span class="approver-label"
+                  th:text="${leave.status == 'WR'} ? 'Rejected by Warden' : 'Approved by Warden'">
+            </span>
+            <span class="approver-name" th:text="${leave.wardenName}"></span>
+          </div>
+        </div>
+
+        <!-- Progress Tracker -->
+        <div class="tracker-wrap">
+          <div class="tracker" th:data-status="${leave.status}">
+            <div class="tracker-progress" id="prog"></div>
+            <!-- steps rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const studentType = /*[[${studentType}]]*/ 'DAY_SCHOLAR';
+
+        const HOSTELLER_FLOW = [
+            { code: 'S',  label: 'Applied' },
+            { code: 'FA', label: 'Faculty\nApproved', rejectCode: 'FR', rejectLabel: 'Faculty\nRejected' },
+            { code: 'HA', label: 'HOD\nApproved',    rejectCode: 'HR', rejectLabel: 'HOD\nRejected' },
+            { code: 'WA', label: 'Warden\nApproved', rejectCode: 'WR', rejectLabel: 'Warden\nRejected' },
+        ];
+
+        const DAY_SCHOLAR_FLOW = [
+            { code: 'S',  label: 'Applied' },
+            { code: 'FA', label: 'Faculty\nApproved', rejectCode: 'FR', rejectLabel: 'Faculty\nRejected' },
+            { code: 'HA', label: 'HOD\nApproved',    rejectCode: 'HR', rejectLabel: 'HOD\nRejected' },
+        ];
+
+        const FLOW = studentType === 'HOSTELLER' ? HOSTELLER_FLOW : DAY_SCHOLAR_FLOW;
+
+        // Map status code -> step index for each flow
+        const HOSTELLER_INDEX  = { S:0, FA:1, FR:1, HA:2, HR:2, WA:3, WR:3 };
+        const DAY_SCHOLAR_INDEX = { S:0, FA:1, FR:1, HA:2, HR:2 };
+        const STATUS_INDEX = studentType === 'HOSTELLER' ? HOSTELLER_INDEX : DAY_SCHOLAR_INDEX;
+
+        const REJECTED_CODES = new Set(['FR', 'HR', 'WR']);
+
+        document.querySelectorAll('.tracker').forEach(tracker => {
+            const status     = tracker.dataset.status;
+            const curIdx     = STATUS_INDEX[status] ?? 0;
+            const isRejected = REJECTED_CODES.has(status);
+
+            let html = '';
+
+            FLOW.forEach((step, idx) => {
+                let cls = '';
+
+                if (isRejected && idx === curIdx) {
+                    cls = 'rejected';
+                } else if (!isRejected && idx < curIdx) {
+                    cls = 'done';
+                } else if (!isRejected && idx === curIdx) {
+                    cls = 'current';
+                }
+
+                const label = (isRejected && idx === curIdx && step.rejectLabel)
+                    ? step.rejectLabel
+                    : step.label;
+
+                html += `
+                    <div class="step ${cls}">
+                        <div class="circle">${idx + 1}</div>
+                        <div class="step-label">${label.replace('\n', '<br>')}</div>
+                    </div>`;
+            });
+
+            tracker.innerHTML = html;
+
+            // Progress bar
+            const progressBar = document.createElement('div');
+            progressBar.className = 'tracker-progress' + (isRejected ? ' rejected-line' : '');
+            const totalSteps = FLOW.length - 1;
+            const pct = (curIdx / totalSteps) * 100;
+            progressBar.style.width = `calc(${pct}% - 40px)`;
+            tracker.insertBefore(progressBar, tracker.firstChild);
+        });
+        /*]]>*/
+    </script>
+
+</body>
+</html>

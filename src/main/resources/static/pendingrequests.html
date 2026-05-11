@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pending requests</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Coming+Soon&family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+    height: 100vh;
+    font-family: "Inter", sans-serif;
+    background-image: url(Desktop\ -\ 43.png);
+    background-repeat: no-repeat; 
+    background-position: center;
+    background-attachment: fixed;
+    background-size: cover;
+    overflow: hidden;
+    }
+    .content {
+      padding: 19%;
+      background-color: rgba(255, 255, 255, 0.636);
+      margin-top: 6px;
+      height: 100%;
+      border-radius: 10px;
+      margin-left:10px;
+      margin-right: 10px;
+      padding-bottom: 330px;
+      padding-top: 100px;
+      z-index: 5;
+      position: relative;
+    }   
+     .message {
+      text-align: center;
+      font-size: 40px;
+      font-weight: bold;
+      z-index: 5;
+    }
+    #navbar {
+            width: 100vw;
+            height: 55px;
+            background-color: #004E9B;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            margin-top: -9px;
+        }
+    #navbar a{
+            color: white;
+            padding: 10px;
+            position: relative;
+            left: 950px;
+        }
+        #collegelogo {
+            height: 55px;
+            position: relative;
+            right:20px;
+        }
+  </style>
+</head>
+<body >
+    <div id="navbar">
+        <img id="collegelogo" src="Sri-Eshwar-College-Of-Engineering.png" alt="College Logo">
+        <a href="http://localhost:3300/loginpage/hosteller/studentacceptedrequests" id="accepted-requests" class="requests">Accepted  Requests</a>
+        <a href="http://localhost:3300/loginpage/hosteller/studentpendingrequests/" id="pending-requests" class="requests">Pending Requests</a>
+    </div>
+  <div class="content">
+    <div class="message">
+      There are no Pending requests...
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Leave Application</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { padding: 0; margin: 0; box-sizing: border-box; }
+
+        body {
+            font-family: "Inter", sans-serif;
+            min-height: 100vh;
+            background: url('/images/Desktop - 43.png') no-repeat center center / cover;
+            background-attachment: fixed;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            background-color: #004E9B;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            height: 56px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .navbar-brand img {
+            height: 38px;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-nav {
+            padding: 7px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-track {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        .btn-track:hover { background: rgba(255,255,255,0.25); }
+
+        .btn-logout {
+            background: #e53935;
+            color: white;
+        }
+
+        .btn-logout:hover { background: #c62828; }
+
+        /* ── PAGE WRAPPER ── */
+        .page-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 36px 16px 60px;
+        }
+
+        /* ── CARD ── */
+        .card {
+            background: rgba(255, 255, 255, 0.96);
+            border-radius: 14px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+            width: 100%;
+            max-width: 720px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: #004E9B;
+            padding: 22px 30px;
+            color: white;
+        }
+
+        .card-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .card-header p {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        .student-meta {
+            display: flex;
+            gap: 20px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .meta-chip {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 12px;
+            color: white;
+        }
+
+        .card-body {
+            padding: 28px 30px;
+        }
+
+        /* ── SECTION LABEL ── */
+        .section-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #004E9B;
+            margin: 24px 0 12px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #e3ecf7;
+        }
+
+        .section-title:first-child { margin-top: 0; }
+
+        /* ── GRID ── */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .grid-1 { display: grid; grid-template-columns: 1fr; gap: 16px; }
+
+        /* ── FORM FIELD ── */
+        .field { display: flex; flex-direction: column; gap: 5px; }
+
+        .field label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .field input,
+        .field select,
+        .field textarea {
+            padding: 9px 12px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 7px;
+            font-size: 14px;
+            font-family: "Inter", sans-serif;
+            color: #111827;
+            background: #fff;
+            transition: border-color 0.2s;
+            width: 100%;
+        }
+
+        .field input:focus,
+        .field select:focus,
+        .field textarea:focus {
+            outline: none;
+            border-color: #004E9B;
+            box-shadow: 0 0 0 3px rgba(0,78,155,0.1);
+        }
+
+        .field input[readonly] {
+            background: #f3f4f6;
+            color: #6b7280;
+            cursor: not-allowed;
+        }
+
+        .field textarea { resize: vertical; min-height: 80px; }
+
+        /* ── FILE INPUT ── */
+        .file-wrapper {
+            border: 2px dashed #d1d5db;
+            border-radius: 7px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .file-wrapper:hover { border-color: #004E9B; }
+
+        .file-wrapper input[type="file"] {
+            display: none;
+        }
+
+        .file-label {
+            font-size: 13px;
+            color: #6b7280;
+            cursor: pointer;
+        }
+
+        .file-label span {
+            color: #004E9B;
+            font-weight: 500;
+            text-decoration: underline;
+        }
+
+        /* ── CHECKBOX ── */
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            background: #f0f6ff;
+            border: 1.5px solid #bfdbfe;
+            border-radius: 7px;
+            margin-top: 4px;
+        }
+
+        .checkbox-row input[type="checkbox"] {
+            width: 17px;
+            height: 17px;
+            accent-color: #004E9B;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .checkbox-row label {
+            font-size: 14px;
+            color: #1e3a5f;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* ── SUBMIT ── */
+        .form-footer {
+            margin-top: 28px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .btn-reset {
+            padding: 10px 22px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 7px;
+            background: white;
+            color: #374151;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-reset:hover { background: #f3f4f6; }
+
+        .btn-submit {
+            padding: 10px 28px;
+            background: #004E9B;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-submit:hover { background: #003a75; }
+
+        /* ── ALERTS ── */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 7px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .alert-success { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+        .alert-error   { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 560px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            .card-body { padding: 20px 18px; }
+            .card-header { padding: 18px 18px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <a class="navbar-brand" href="#">
+        <img th:src="@{/images/Sri-Eshwar-College-Of-Engineering.png}" alt="SECE Logo">
+        LeaveItToUs
+    </a>
+    <div class="nav-actions">
+        <a th:href="@{/student/leave-status}" class="btn-nav btn-track">📋 Track Status</a>
+        <a th:href="@{/logout}" class="btn-nav btn-logout">Logout</a>
+    </div>
+</nav>
+
+<div class="page-wrapper">
+
+    <!-- ══════════════════════════════════════
+         HOSTELLER FORM
+    ══════════════════════════════════════ -->
+    <div class="card" th:if="${studentType == 'HOSTELLER'}">
+        <div class="card-header">
+            <h2>🏠 Hosteller Leave Application</h2>
+            <p>Fill in the details below to submit your leave request</p>
+            <div class="student-meta">
+                <span class="meta-chip" th:text="'Roll No: ' + ${student.rollNo}"></span>
+                <span class="meta-chip" th:text="'Name: ' + ${student.name}"></span>
+                <span class="meta-chip" th:text="'Block: ' + ${student.hostelBlock}"></span>
+                <span class="meta-chip" th:text="'Room: ' + ${student.roomNo}"></span>
+            </div>
+        </div>
+
+        <div class="card-body">
+
+            <!-- Alerts -->
+            <div th:if="${successMsg}" class="alert alert-success" th:text="${successMsg}"></div>
+            <div th:if="${errorMsg}" class="alert alert-error" th:text="${errorMsg}"></div>
+
+            <form th:action="@{/student/submit-leave}" method="post"
+                  enctype="multipart/form-data" th:object="${leaveRequest}">
+
+                <input type="hidden" th:field="*{student.rollNo}" />
+
+                <!-- Leave Duration -->
+                <div class="section-title">Leave Duration</div>
+                <div class="grid-2">
+                    <div class="field">
+                        <label for="fromDate">From Date</label>
+                        <input type="date" id="fromDate" th:field="*{fromDate}" required>
+                    </div>
+                    <div class="field">
+                        <label for="fromTime">From Time</label>
+                        <input type="time" id="fromTime" th:field="*{fromTime}" required>
+                    </div>
+                    <div class="field">
+                        <label for="toDate">To Date</label>
+                        <input type="date" id="toDate" th:field="*{toDate}" required>
+                    </div>
+                    <div class="field">
+                        <label for="toTime">To Time</label>
+                        <input type="time" id="toTime" th:field="*{toTime}" required>
+                    </div>
+                </div>
+
+                <!-- Reason -->
+                <div class="section-title">Reason</div>
+                <div class="grid-2">
+                    <div class="field">
+                        <label for="reasonType">Reason Type</label>
+                        <select id="reasonType" th:field="*{reasonType}">
+                            <option value="Personal">Personal</option>
+                            <option value="Medical">Medical</option>
+                            <option value="OnDuty">On Duty</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid-1" style="margin-top:16px;">
+                    <div class="field">
+                        <label for="purpose">Purpose / Description</label>
+                        <textarea id="purpose" th:field="*{purpose}" rows="3" placeholder="Briefly describe the reason for your leave..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Hostel Info -->
+                <div class="section-title">Hostel Details</div>
+                <div class="grid-2">
+                    <div class="field">
+                        <label>Block</label>
+                        <input type="text" th:field="*{student.hostelBlock}" readonly>
+                    </div>
+                    <div class="field">
+                        <label>Room No</label>
+                        <input type="text" th:field="*{student.roomNo}" readonly>
+                    </div>
+                </div>
+
+                <div class="checkbox-row" style="margin-top:16px;">
+                    <input type="checkbox" id="stayingOutside" th:field="*{stayingOutside}">
+                    <label for="stayingOutside">I will be staying outside the hostel tonight</label>
+                </div>
+
+                <!-- Supporting Document -->
+                <div class="section-title">Supporting Document</div>
+                <div class="file-wrapper" onclick="document.getElementById('fileInput').click()">
+                    <input type="file" id="fileInput" name="file" onchange="updateFileName(this)">
+                    <p class="file-label">Click to <span>browse file</span> &nbsp;·&nbsp; PDF, JPG, PNG accepted</p>
+                    <p id="fileName" style="margin-top:6px;font-size:13px;color:#374151;"></p>
+                </div>
+
+                <div class="form-footer">
+                    <button type="reset" class="btn-reset" onclick="document.getElementById('fileName').textContent=''">Reset</button>
+                    <button type="submit" class="btn-submit">Submit Application</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         DAY-SCHOLAR FORM
+    ══════════════════════════════════════ -->
+    <div class="card" th:if="${studentType == 'DAY_SCHOLAR'}">
+        <div class="card-header">
+            <h2>🎓 Day-Scholar Leave Application</h2>
+            <p>Fill in the details below to submit your leave request</p>
+            <div class="student-meta">
+                <span class="meta-chip" th:text="'Roll No: ' + ${student.rollNo}"></span>
+                <span class="meta-chip" th:text="'Name: ' + ${student.name}"></span>
+            </div>
+        </div>
+
+        <div class="card-body">
+
+            <!-- Alerts -->
+            <div th:if="${successMsg}" class="alert alert-success" th:text="${successMsg}"></div>
+            <div th:if="${errorMsg}" class="alert alert-error" th:text="${errorMsg}"></div>
+
+            <form th:action="@{/student/submit-leave}" method="post"
+                  enctype="multipart/form-data" th:object="${leaveRequest}">
+
+                <input type="hidden" th:field="*{student.rollNo}" />
+
+                <!-- Leave Duration -->
+                <div class="section-title">Leave Duration</div>
+                <div class="grid-2">
+                    <div class="field">
+                        <label for="fromDate2">From Date</label>
+                        <input type="date" id="fromDate2" th:field="*{fromDate}" required>
+                    </div>
+                    <div class="field">
+                        <label for="fromTime2">From Time</label>
+                        <input type="time" id="fromTime2" th:field="*{fromTime}" required>
+                    </div>
+                    <div class="field">
+                        <label for="toDate2">To Date</label>
+                        <input type="date" id="toDate2" th:field="*{toDate}" required>
+                    </div>
+                    <div class="field">
+                        <label for="toTime2">To Time</label>
+                        <input type="time" id="toTime2" th:field="*{toTime}" required>
+                    </div>
+                </div>
+
+                <!-- Reason -->
+                <div class="section-title">Reason</div>
+                <div class="grid-2">
+                    <div class="field">
+                        <label for="reasonType2">Reason Type</label>
+                        <select id="reasonType2" th:field="*{reasonType}">
+                            <option value="Personal">Personal</option>
+                            <option value="Medical">Medical</option>
+                            <option value="OnDuty">On Duty</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid-1" style="margin-top:16px;">
+                    <div class="field">
+                        <label for="purpose2">Purpose / Description</label>
+                        <textarea id="purpose2" th:field="*{purpose}" rows="3" placeholder="Briefly describe the reason for your leave..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Supporting Document -->
+                <div class="section-title">Supporting Document</div>
+                <div class="file-wrapper" onclick="document.getElementById('fileInput2').click()">
+                    <input type="file" id="fileInput2" name="file" onchange="updateFileName2(this)">
+                    <p class="file-label">Click to <span>browse file</span> &nbsp;·&nbsp; PDF, JPG, PNG accepted</p>
+                    <p id="fileName2" style="margin-top:6px;font-size:13px;color:#374151;"></p>
+                </div>
+
+                <div class="form-footer">
+                    <button type="reset" class="btn-reset" onclick="document.getElementById('fileName2').textContent=''">Reset</button>
+                    <button type="submit" class="btn-submit">Submit Application</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function updateFileName(input) {
+        document.getElementById('fileName').textContent =
+            input.files.length ? '📎 ' + input.files[0].name : '';
+    }
+    function updateFileName2(input) {
+        document.getElementById('fileName2').textContent =
+            input.files.length ? '📎 ' + input.files[0].name : '';
+    }
+</script>
+
+</body>
+</html>

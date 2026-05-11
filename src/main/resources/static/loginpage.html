@@ -1,0 +1,528 @@
+<!--<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        body {
+            height: 100vh;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('Desktop - 43.png'); 
+            background-repeat: no-repeat; 
+            background-position: center;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+        #navbar {
+            width: 100%;
+            height: 55px;
+            background-color: #004E9B;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        #collegelogo {
+            height: 55px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.8);
+            width: 400px;
+            height: 450px;
+            border-radius: 10px;
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 80px; 
+        }
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #333;
+        }
+        .tab.active {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+        }
+        .form-group {
+            margin: 20px 0;
+        }
+        .form-group input {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-around;
+        }
+        .buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .buttons .cancel {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        .buttons .login {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar">
+        <img id="collegelogo" src="Sri-Eshwar-College-Of-Engineering.png" alt="College Logo">
+    </div>
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" id="studentTab" onclick="selectTab('Student')">Student</div>
+            <div class="tab inactive" id="facultyTab" onclick="selectTab('Faculty')">Faculty</div>
+            <div class="tab inactive" id="hodTab" onclick="selectTab('HOD')">HOD</div>
+            <div class="tab inactive" id="wardenTab" onclick="selectTab('Warden')">Warden</div>
+        </div>
+        <h2>Welcome</h2>
+        <p>Login to your Account</p>
+        <div class="form-group">
+            <input type="text" id="email" placeholder="Email" required>
+        </div>
+        <div class="form-group" id="passwordGroup" style="display: none;">
+            <input type="password" id="password" placeholder="Password" required>
+        </div>
+        <p id="msg"></p>
+        <div class="buttons">
+            <button class="cancel" onclick="cancel()">Cancel</button>
+            <button class="login" onclick="login()">Login</button>
+        </div>
+    </div>
+    <script>
+        let selectedUserType = 'Student'; 
+        const msg = document.getElementById("msg");
+
+        const student1 = { email: "pranav.a2024cce@sece.ac.in", status: "hosteller", password:"password1" };
+        const student2 = { email: "antonyfidelcastro.a2024it@sece.ac.in", status: "dayscholar", password:"password1" };
+        let studentarray = [student1, student2];
+
+        const faculty1 = { email: "classfaculty1@sece.ac.in", password: "password1", class: "CCE" };
+        const faculty2 = { email: "classfaculty2@sece.ac.in", password: "password2", class: "CSE" };
+        let facultyarray = [faculty1, faculty2];
+
+        const hod1 = { email: "hod1@sece.ac.in", password: "password1", dept: "CCE" };
+        const hod2 = { email: "hod2@sece.ac.in", password: "password2", dept: "CSE" };
+        let hodarray = [hod1, hod2];
+
+        const warden1 = { email: "warden1@sece.ac.in", password: "password1", block: 'A' };
+        const warden2 = { email: "warden2@sece.ac.in", password: "password2", block: 'B' };
+        let wardenarray = [warden1, warden2];
+        function selectTab(userType) {
+            selectedUserType = userType;
+
+            document.getElementById('studentTab').classList.remove('active');
+            document.getElementById('facultyTab').classList.remove('active');
+            document.getElementById('hodTab').classList.remove('active');
+            document.getElementById('wardenTab').classList.remove('active');
+
+            document.getElementById('studentTab').classList.add('inactive');
+            document.getElementById('facultyTab').classList.add('inactive');
+            document.getElementById('hodTab').classList.add('inactive');
+            document.getElementById('wardenTab').classList.add('inactive');
+
+            if (userType === 'Student') {
+                document.getElementById('passwordGroup').display = "none";
+                document.getElementById('studentTab').classList.add('active');
+            } else {
+                document.getElementById('passwordGroup').style.display = 'block';
+                if (userType === 'Faculty') {
+                    document.getElementById('facultyTab').classList.add('active');
+                } else if (userType === 'HOD') {
+                    document.getElementById('hodTab').classList.add('active');
+                } else if (userType === 'Warden') {
+                    document.getElementById('wardenTab').classList.add('active');
+                }
+            }
+            document.getElementById('email').placeholder = `${userType.toLowerCase()}@sece.ac.in`;
+        }
+        function cancel() {
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+        }
+        function login() {
+            if (selectedUserType === 'Student') {
+                checkstudent();
+            } else if (selectedUserType === 'Faculty') {
+                checkfaculty();
+            } else if (selectedUserType === 'HOD') {
+                checkhod();
+            } else if (selectedUserType === 'Warden') {
+                checkwarden();
+            }
+        }
+        function checkstudent() {
+            const studentmail = document.getElementById("email").value;
+            let valid = false;
+            for (let i = 0; i < studentarray.length; i++) {
+                if (studentarray[i].email === studentmail) {
+                    valid = true
+                    if (studentarray[i].status === "hosteller") {
+                        window.location.href = "http://localhost:3300/loginpage/hostellerformselection";
+                    } else {
+                        window.location.href = "http://localhost:3300/loginpage/dayscholarformselection";
+                    }
+                    break;
+                }
+            }
+            if(!valid){
+                msg.textContent = "Email or Password invalid";
+            }
+           
+        }
+        function checkfaculty() {
+            const facultymail = document.getElementById("email").value;
+            const facultypass = document.getElementById("password").value;
+            let valid = false
+            for (let i = 0; i < facultyarray.length; i++) {
+                if (facultyarray[i].email === facultymail && facultyarray[i].password === facultypass) {
+                    valid = true
+                    window.location.href = "http://localhost:3300/loginpage/facultygreeting";
+                    break;
+                }
+            }
+            if(!valid){
+                msg.textContent = "Email or Password invalid";
+            }
+
+        }   
+        function checkhod() {
+            const hodmail = document.getElementById("email").value;
+            const hodpass = document.getElementById("password").value;
+            let valid = false
+            for (let i = 0; i < hodarray.length; i++) {
+                if (hodarray[i].email === hodmail && hodarray[i].password === hodpass) {
+                    valid = true
+                    window.location.href = "http://localhost:3300/loginpage/hodgreeting";
+                    break;
+                }
+            }
+            if(!valid){
+                msg.textContent = "Email or Password invalid";
+            }
+        }
+        function checkwarden() {
+            const wardenmail = document.getElementById("email").value;
+            const wardenpass = document.getElementById("password").value;
+            let valid = false
+            for (let i = 0; i < wardenarray.length; i++) {
+                if (wardenarray[i].email === wardenmail && wardenarray[i].password === wardenpass) {
+                    valid = true
+                    window.location.href = "http://localhost:3300/loginpage/wardengreeting"; 
+                    break;
+                }
+            }
+            if(!valid){
+                msg.textContent = "Email or Password invalid";
+            }
+        }
+    </script>
+</body>
+</html>-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        body {
+            height: 100vh;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('Desktop - 43.png'); 
+            background-repeat: no-repeat; 
+            background-position: center;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+        #navbar {
+            width: 100%;
+            height: 55px;
+            background-color: #004E9B;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            align-items: center;
+            padding-left: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        #collegelogo {
+            height: 55px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.8);
+            width: 400px;
+            height: 450px;
+            border-radius: 10px;
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 80px; 
+        }
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #333;
+        }
+        .tab.active {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+        }
+        .form-group {
+            margin: 20px 0;
+        }
+        .form-group input {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-around;
+        }
+        .buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .buttons .cancel {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        .buttons .login {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar">
+        <img id="collegelogo" src="Sri-Eshwar-College-Of-Engineering.png" alt="College Logo">
+    </div>
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" id="studentTab" onclick="selectTab('Student')">Student</div>
+            <div class="tab inactive" id="facultyTab" onclick="selectTab('Faculty')">Faculty</div>
+            <div class="tab inactive" id="hodTab" onclick="selectTab('HOD')">HOD</div>
+            <div class="tab inactive" id="wardenTab" onclick="selectTab('Warden')">Warden</div>
+        </div>
+        <h2>Welcome</h2>
+        <p>Login to your Account</p>
+        <div class="form-group">
+            <input type="text" id="email" placeholder="Email" required>
+        </div>
+        <div class="form-group" id="passwordGroup" style="display: block;">
+            <input type="password" id="password" placeholder="Password" required>
+        </div>
+        <p id="msg"></p>
+        <div class="buttons">
+            <button class="cancel" onclick="cancel()">Cancel</button>   
+            <button class="login" onclick="login()">Login</button>
+        </div>
+    </div>
+    <script>
+        let selectedUserType = 'Student'; 
+        const msg = document.getElementById("msg");
+
+        const student1 = { email: "pranav.a2024cce@sece.ac.in", status: "hosteller",password:"password1" };
+        const student2 = { email: "antonyfidelcastro.a2024it@sece.ac.in", status: "dayscholar",password:"password2" };
+        let studentarray = [student1, student2];
+
+        const faculty1 = { email: "classfaculty1@sece.ac.in", password: "password1", class: "CCE" };
+        const faculty2 = { email: "classfaculty2@sece.ac.in", password: "password2", class: "CSE" };
+        let facultyarray = [faculty1, faculty2];
+
+        const hod1 = { email: "hod1@sece.ac.in", password: "password1", dept: "CCE" };
+        const hod2 = { email: "hod2@sece.ac.in", password: "password2", dept: "CSE" };
+        let hodarray = [hod1, hod2];
+
+        const warden1 = { email: "warden1@sece.ac.in", password: "password1", block: 'A' };
+        const warden2 = { email: "warden2@sece.ac.in", password: "password2", block: 'B' };
+        let wardenarray = [warden1, warden2];
+
+        function selectTab(userType) {
+            selectedUserType = userType;
+            document.getElementById('studentTab').classList.remove('active');
+            document.getElementById('facultyTab').classList.remove('active');
+            document.getElementById('hodTab').classList.remove('active');
+            document.getElementById('wardenTab').classList.remove('active');
+
+            document.getElementById('studentTab').classList.add('inactive');
+            document.getElementById('facultyTab').classList.add('inactive');
+            document.getElementById('hodTab').classList.add('inactive');
+            document.getElementById('wardenTab').classList.add('inactive');
+
+            if (userType === 'Student') {
+                document.getElementById('studentTab').classList.add('active');
+            } else {
+                document.getElementById('passwordGroup').style.display = 'block';
+                if (userType === 'Faculty') {
+                    document.getElementById('facultyTab').classList.add('active');
+                } else if (userType === 'HOD') {
+                    document.getElementById('hodTab').classList.add('active');
+                } else if (userType === 'Warden') {
+                    document.getElementById('wardenTab').classList.add('active');
+                }
+            }
+            document.getElementById('email').placeholder = `${userType.toLowerCase()}@sece.ac.in`;
+        }
+    
+        function cancel() {
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+            msg.textContent = '';
+        }
+
+        function login() {
+            if (selectedUserType === 'Student') {
+                checkstudent();
+            } else if (selectedUserType === 'Faculty') {
+                checkfaculty();
+            } else if (selectedUserType === 'HOD') {
+                checkhod();
+            } else if (selectedUserType === 'Warden') {
+                checkwarden();
+            }
+        }
+
+        function checkstudent() {
+            const studentmail = document.getElementById("email").value;
+            const studentpass = document.getElementById("password").value;
+            let loginSuccess = false;
+
+            for (let i = 0; i < studentarray.length; i++) {
+                if (studentarray[i].email === studentmail && studentarray[i].password === studentpass) {
+                    loginSuccess = true;
+                    if (studentarray[i].status === "hosteller") {
+                        window.location.href = "hostellerformselection.html";
+                    } else {
+                        window.location.href = "http://localhost:3300/loginpage/dayscholarformselection.html";
+                    }
+                    break;
+                }
+            }
+
+            if (!loginSuccess) {
+                msg.textContent = "Email or password invalid";
+            } else {
+                msg.textContent = "";
+            }
+        }
+
+        function checkfaculty() {
+            const facultymail = document.getElementById("email").value;
+            const facultypass = document.getElementById("password").value;
+            let loginSuccess = false;
+
+            for (let i = 0; i < facultyarray.length; i++) {
+                if (facultyarray[i].email === facultymail && facultyarray[i].password === facultypass) {
+                    loginSuccess = true;
+                    window.location.href = "facultygreeting.html";
+                    break;
+                }
+            }
+
+            if (!loginSuccess) {
+                msg.textContent = "Email or password invalid";
+            } else {
+                msg.textContent = "";
+            }
+        }
+
+        function checkhod() {
+            const hodmail = document.getElementById("email").value;
+            const hodpass = document.getElementById("password").value;
+            let loginSuccess = false;
+
+            for (let i = 0; i < hodarray.length; i++) {
+                if (hodarray[i].email === hodmail && hodarray[i].password === hodpass) {
+                    loginSuccess = true;
+                    window.location.href = "hodgreeting.html";
+                    break;
+                }
+            }
+
+            if (!loginSuccess) {
+                msg.textContent = "Email or password invalid";
+            } else {
+                msg.textContent = "";
+            }
+        }
+
+        function checkwarden() {
+            const wardenmail = document.getElementById("email").value;
+            const wardenpass = document.getElementById("password").value;
+            let loginSuccess = false;
+
+            for (let i = 0; i < wardenarray.length; i++) {
+                if (wardenarray[i].email === wardenmail && wardenarray[i].password === wardenpass) {
+                    loginSuccess = true;
+                    window.location.href = "wardengreeting.html";
+                    break;
+                }
+            }
+
+            if (!loginSuccess) {
+                msg.textContent = "Email or password invalid";
+            } else {
+                msg.textContent = "";
+            }
+        }
+    </script>
+</body>
+</html>
